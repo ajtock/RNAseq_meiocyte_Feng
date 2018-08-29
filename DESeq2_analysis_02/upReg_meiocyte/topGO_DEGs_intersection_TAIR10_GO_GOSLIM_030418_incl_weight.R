@@ -9,7 +9,7 @@
 # http://avrilomics.blogspot.co.uk/2015/07/using-topgo-to-test-for-go-term.html
 
 # Example usage:
-# ./topGO_DEGs_intersection_TAIR10_GO_GOSLIM_030418.R BP res_taf4bVCol_0.01_lfcShrink_Chr_Sig0.01_downRegGeneIDs_res_meiocyteVleaf_0.01_lfcShrink_Chr_Sig0.01_upRegGeneIDs.txt 0.05
+# ./topGO_DEGs_intersection_TAIR10_GO_GOSLIM_030418_incl_weight.R BP res_taf4bVCol_0.01_lfcShrink_Chr_Sig0.01_downRegGeneIDs_res_meiocyteVleaf_0.01_lfcShrink_Chr_Sig0.01_upRegGeneIDs.txt 0.05
 
 #options(echo=TRUE) # if you want to see commands in output file
 args <- commandArgs(trailingOnly = TRUE)
@@ -50,6 +50,8 @@ degGO <- function(target) {
                  file="/dev/null")
   capture.output(resultElim <- runTest(GOdata, algorithm = "elim", statistic = "fisher"),
                  file="/dev/null")
+  capture.output(resultWeight <- runTest(GOdata, algorithm = "weight", statistic = "fisher"),
+                 file="/dev/null")
   capture.output(resultTopGO <- runTest(GOdata, algorithm = "weight01", statistic = "fisher"),
                  file="/dev/null")
 
@@ -60,6 +62,7 @@ degGO <- function(target) {
   # List significant results and write to file
   capture.output(enrichRes <- GenTable(GOdata, classicFisher = resultClassic,
                                        elimFisher = resultElim,
+                                       weightFisher = resultWeight,
                                        topGOFisher = resultTopGO,
                                        orderBy = "topGOFisher",
                                        ranksOf = "elimFisher", topNodes = numSignif),
