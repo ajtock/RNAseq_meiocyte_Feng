@@ -1,0 +1,38 @@
+SAMPLES: ["Col_RNAseq_meiocyte_Rep1",
+          "Col_RNAseq_meiocyte_Rep2",
+          "Col_RNAseq_meiocyte_Rep3",
+          "taf4b_RNAseq_meiocyte_Rep1",
+          "taf4b_RNAseq_meiocyte_Rep2",
+          "taf4b_RNAseq_meiocyte_Rep3",
+          "Bur0_RNAseq_meiocyte_Rep1",
+          "Bur0_RNAseq_meiocyte_Rep2",
+          "Bur0_RNAseq_meiocyte_Rep3"]
+THREADS: 16
+MEMORY: "100g"
+FILTER:
+  fastqc:
+      contaminants: "contaminants/contaminants_list_fastqc.txt"
+  bbduk:
+      kmerSize: 18
+      rRNAfasta: "contaminants/ribokmers.fa.gz"
+  trimmomatic:
+      ILLUMINACLIP: "ILLUMINACLIP:contaminants/cat_all_and_TruSeq_Single_Indexes.fa:2:30:10"
+      HEADCROP: "HEADCROP:9"
+      CROP: "CROP:65"
+      SLIDINGWINDOW: "SLIDINGWINDOW:4:15"
+      LEADING: "LEADING:3"
+      TRAILING: "TRAILING:3"
+      MINLEN: "MINLEN:36"
+MAPPING:
+      reference: "data/index/TAIR10_chr_all"
+      alignments: 10 # STAR option --outFilterMultimapNmax
+      mismatches: 2  # STAR option --outFilterMismatchNmax
+      MAPQboth: 3
+      MAPQunique: 255
+      sortMemory: "5G"
+COVERAGE:
+      normalizeUsing: "CPM"
+      ignoreForNormalization: "mitochondria chloroplast" # Reference genome-specific parameter
+      binSize: 1
+      genomeBinSize: 10000
+      genomeBinName: "10kb"
